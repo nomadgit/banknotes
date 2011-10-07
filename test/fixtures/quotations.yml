@@ -1,0 +1,19 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  code: MyString
+  notes: MyText
+  terms: MyText
+  status: MyString
+  tax: 1.5
+  discount: 1.5
+  client: 
+
+two:
+  code: MyString
+  notes: MyText
+  terms: MyText
+  status: MyString
+  tax: 1.5
+  discount: 1.5
+  client: 

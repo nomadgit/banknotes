@@ -1,0 +1,71 @@
+<%
+quotation_message = <<MSG
+
+
+
+-----------------------------
+Quotation Summary
+-----------------------------
+
+Quotation Code: #{@quotation.code}
+Amount: #{number_to_currency(@quotation.total,:locale => :th)}
+
+
+Thank You!
+-----------------------------
+
+MSG
+%>
+
+<%= form_tag dispatch_quotation_admin_quotation_path(@quotation) do %>
+  <fieldset class="inputs">
+    <legend><span>Recipients</span></legend>
+    <ol>
+      <li class="string required">
+        <%= label_tag :recipients %>
+        <%= text_field_tag :recipients, @quotation.client.email %>
+        <p class="inline-hints">Comma-separated list of emails.</p>
+      </li>
+      
+      <li class="boolean">
+        <label for="send_copy">
+          <%= check_box_tag :send_copy, "send" %>
+          Send me a copy
+        </label>
+      </li>
+    </ol>
+  </fieldset>
+  
+  <fieldset class="inputs">
+    <legend><span>Message</span></legend>
+    <ol>
+      <li class="string required">
+        <%= label_tag :subject %>
+        <%= text_field_tag :subject, "Quotation ##{@quotation.code}" %>
+      </li>
+      
+      <li class="textarea required">
+        <%= label_tag :message %>
+        <%= text_area_tag :message, quotation_message, :rows => 10 %>
+      </li>
+      
+      <li class="boolean">
+        <label for="attach_pdf">
+          <%= check_box_tag :attach_pdf, "attach", true %>
+          Attach Quotation as PDF
+        </label>
+      </li>
+    </ol>
+  </fieldset>
+  
+  <fieldset class="buttons">
+    <ol>
+      <li class="commit">
+        <%= submit_tag "Send Quotation" %>
+      </li>
+      <li class="cancel">
+        <%= link_to "Cancel", admin_quotation_path(@quotation) %>
+      </li>
+    </ol>
+  </fieldset>
+<% end %>

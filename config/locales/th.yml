@@ -1,0 +1,10 @@
+---
+th:
+  number:
+    currency:
+      format:
+        format: "%u%n"
+        unit: "฿"
+        precision: 2
+        seperator: '.'
+        delimiter: ','

@@ -1,0 +1,11 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  type: MyString
+  detail: MyText
+  cost: 1.5
+
+two:
+  type: MyString
+  detail: MyText
+  cost: 1.5
