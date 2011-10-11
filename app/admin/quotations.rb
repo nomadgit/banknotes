@@ -53,17 +53,14 @@ def generate_quotation(quotation)
     pdf.text quotation.client.name,:style => :bold
     pdf.text quotation.client.address
     pdf.text quotation.client.phone
-    if quotation.client.email
-      pdf.text quotation.client.email
-    end
 
     # Items
     pdf.move_down 10
-    pdf.font_size(10)
-    header = ["<color rgb='FFFFFF'>Item</color>",
-              "<color rgb='FFFFFF'>Quantity</color>",
-              "<color rgb='FFFFFF'>Amount</color>",
-              "<color rgb='FFFFFF'>Total</color>"]
+    pdf.font_size(12)
+    header = ["<font size='13'><color rgb='FFFFFF'>ITEM</color></font>",
+              "<font size='13'><color rgb='FFFFFF'>QUANTITY</color></font>",
+              "<font size='13'><color rgb='FFFFFF'>AMOUNT</color></font>",
+              "<font size='13'><color rgb='FFFFFF'>TOTAL</color></font>"]
     items = quotation.quotation_items.collect do |item|
       [item.description, item.quantity.to_s, number_to_currency(item.amount), number_to_currency(item.total)]
     end
@@ -83,7 +80,7 @@ def generate_quotation(quotation)
                     + [["", "", "Total:", "#{number_to_currency(quotation.total)}"]]
     end
 
-    pdf.table [header] + items,:cell_style => { :inline_format => true }, :header => true, :width => pdf.bounds.width do
+    pdf.table [header] + items,:cell_style => { :inline_format => true }, :header => true, :width => pdf.bounds.width,:column_widths => {0 => 315, 1 => 75, 2 => 75, 3 => 75} do
       cells.borders = []
       row(-4..-1).borders = []
       row(hl).style :borders => [:top], :border_width => 1,:border_color => "888888"
@@ -92,32 +89,45 @@ def generate_quotation(quotation)
       row(-1).style :font_style => :bold
     end
 
-
- 
-
     # Terms
+    pdf.move_down -85
     if quotation.terms != ''
       pdf.move_down 20
-      pdf.text 'Terms', :size => 18
+      pdf.text 'PAYMENT TERMS', :size => 13, :style => :bold
       pdf.text quotation.terms
     end
 
     # Notes
     if quotation.notes != ''
       pdf.move_down 20
-      pdf.text 'Notes', :size => 18
+      pdf.text 'Notes', :size => 13, :style => :bold
       pdf.text quotation.notes
     end
 
     #Receiver signature
     pdf.move_down 20
-    pdf.text 'Receiver', :size => 18
-    pdf.text "________________________________"
-    pdf.text "Name___________________________"
-    pdf.text "Date____________________________"
+    pdf.text 'RECEIVED BY', :size => 13, :style => :bold
+    pdf.move_down 15
+    pdf.text "________________________________________________"
+    pdf.move_down 10
+    pdf.text "Name___________________________________________"
+    pdf.move_down 10
+    pdf.text "Date____________________________________________"
+
+
+    #Authorized by
+    pdf.move_down -92
+    pdf.text "AUTHORIZED BY                                             <color rgb='ffffff'>.<color>", :size => 13,:inline_format => true,:align => :right,:style => :bold
+    pdf.move_down 15
+    pdf.text "________________________________________________",:align => :right
+    pdf.move_down 10
+    pdf.text "Name___________________________________________",:align => :right
+    pdf.move_down 10
+    pdf.text "Date____________________________________________",:align => :right
   end
 end
 
+#####################################################################################################################
 ActiveAdmin.register Quotation do
   scope :all, :default => true
   scope :draft do |quotations|
@@ -286,7 +296,8 @@ ActiveAdmin.register Quotation do
     end
     
     f.inputs "Options" do
-      f.input :code, :hint => "Latest Quotation's code: #{Quotation.last.code}"
+      if Quotation.last then code = Quotation.last.code end
+      f.input :code, :hint => "Latest Quotation's code: #{code}"
       f.input :specific_date, :hint => "If blank Date in this quotation will be #{Time.now.to_s.split(" ")[0]}"
       f.input :status, :collection => Quotation.status_collection, :as => :radio
       f.input :tax, :input_html => { :style => "width: 30px"}, :hint => "This should be a percentage, from 0 to 100 (without the % sign)"

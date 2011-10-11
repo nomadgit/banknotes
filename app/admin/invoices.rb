@@ -31,11 +31,6 @@ def generate_invoice(invoice)
       pdf.text "<color rgb='000000'>TAX NO: 3033993042</color>", :inline_format => true ,
                                                                  :style => :bold,:align => :right
     }
-#    # TAX NO
-#    pdf.font_size(12) {
-#      pdf.formatted_text_box [ {:text => "TAX NO: 3033993042",:color => "000000"}
-#                             ], :at => [150, 710], :width => 200, :height => 100
-#    }
 
     pdf.move_down -130
 
@@ -60,9 +55,6 @@ def generate_invoice(invoice)
     pdf.text invoice.client.name ,:style => :bold
     pdf.text invoice.client.address
     pdf.text invoice.client.phone
-#    if invoice.client.email
-#      pdf.text invoice.client.email
-#    end
 
     # Items
     pdf.move_down 10
@@ -100,6 +92,7 @@ def generate_invoice(invoice)
     end
 
     # Terms
+    pdf.move_down -85
     if invoice.terms != ''
       pdf.move_down 20
       pdf.text 'PAYMENT TERMS', :size => 13, :style => :bold
@@ -125,7 +118,7 @@ def generate_invoice(invoice)
 
 
     #Authorized by
-    pdf.move_down -94
+    pdf.move_down -92
     pdf.text "AUTHORIZED BY                                             <color rgb='ffffff'>.<color>", :size => 13,:inline_format => true,:align => :right,:style => :bold
     pdf.move_down 15
     pdf.text "________________________________________________",:align => :right
@@ -139,7 +132,7 @@ def generate_invoice(invoice)
     end
   end
 end
-
+#######################################################################################################################
 ActiveAdmin.register Invoice do
   scope :all, :default => true
   scope :draft do |invoices|
@@ -335,7 +328,8 @@ ActiveAdmin.register Invoice do
     end
     
     f.inputs "Options" do
-      f.input :code, :hint => "Latest invoice's code: #{Invoice.last.code}"
+      if Invoice.last then code = Invoice.last.code end
+      f.input :code, :hint => "Latest invoice's code: #{code} "
       f.input :status, :collection => Invoice.status_collection, :as => :radio
       f.input :specific_date, :hint => "If blank Date in this invoice will be #{Time.now.to_s.split(" ")[0]}"
       f.input :due_date
