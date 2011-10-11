@@ -95,6 +95,8 @@ def generate_quotation(quotation)
       pdf.move_down 20
       pdf.text 'PAYMENT TERMS', :size => 13, :style => :bold
       pdf.text quotation.terms
+    else
+      pdf.move_down 35
     end
 
     # Notes
@@ -102,6 +104,8 @@ def generate_quotation(quotation)
       pdf.move_down 20
       pdf.text 'Notes', :size => 13, :style => :bold
       pdf.text quotation.notes
+    else
+      pdf.move_down 35
     end
 
     #Receiver signature

@@ -97,6 +97,8 @@ def generate_invoice(invoice)
       pdf.move_down 20
       pdf.text 'PAYMENT TERMS', :size => 13, :style => :bold
       pdf.text invoice.terms
+    else
+      pdf.move_down 35
     end
 
     # Notes
@@ -104,6 +106,8 @@ def generate_invoice(invoice)
       pdf.move_down 20
       pdf.text 'REMARKS', :size => 13, :style => :bold
       pdf.text invoice.notes
+    else
+      pdf.move_down 35
     end
 
     #Receiver signature
