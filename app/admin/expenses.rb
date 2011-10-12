@@ -20,7 +20,7 @@ ActiveAdmin.register Expense do
     end
   end
 
-  sidebar "Total Expense in past 30 days" do
+  sidebar "Total Expense in past 30 days" , :only => :index do
     ul do
       li "Travel: "+expenses.where(:expense_type => "travel").where("created_at > ?", Time.now-30.day).sum(:cost).to_s
       li "Goods and Services: "+expenses.where(:expense_type => "goods_and_services").where("created_at > ?", Time.now-30.day).sum(:cost).to_s
